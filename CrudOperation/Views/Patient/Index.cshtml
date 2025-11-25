@@ -1,0 +1,83 @@
+﻿@model IEnumerable<Patient>
+@{
+    ViewData["Title"] = "Index";
+}
+@model IEnumerable<Patient>
+
+@{
+    ViewData["Title"] = "Patient List";
+}
+
+<h2>Patient List</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Picture</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Phone</th>
+            <th>Date of Birth</th>
+            <th>Address</th>
+            <th>Appointments</th>
+            <th>Doctors</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <!-- Patient Picture -->
+                <td>
+                    @if (!string.IsNullOrEmpty(p.Picture))
+                    {
+                        <img src="@Url.Content(p.Picture)" width="60" height="60" style="border-radius:5px;" />
+                    }
+                    else
+                    {
+                        <span>No Image</span>
+                    }
+                </td>
+
+                <td>@p.Name</td>
+                <td>@p.Age</td>
+                <td>@p.Phone</td>
+                <td>@p.DateOfBirth.ToString("yyyy-MM-dd")</td>
+                <td>@p.Address</td>
+
+                <!-- Appointments Count -->
+                <td>
+                    @p.Appointments?.Count() 
+                </td>
+
+                <!-- Doctor Names From Appointments -->
+                <td>
+                    @if (p.Appointments != null && p.Appointments.Any())
+                    {
+                        <ul>
+                            @foreach (var a in p.Appointments)
+                            {
+                                <li>@a.Doctor?.Name</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <span>No Doctor</span>
+                    }
+                </td>
+
+                <!-- Actions -->
+                <td>
+                    <a class="btn btn-sm btn-primary" href="@Url.Action("Edit", "Patient", new { id = p.Id })">Edit</a>
+                    <a class="btn btn-sm btn-info" href="@Url.Action("Details", "Patient", new { id = p.Id })">Details</a>
+                    <a class="btn btn-sm btn-danger" href="@Url.Action("Delete", "Patient", new { id = p.Id })">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
